@@ -37,6 +37,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider:
   flutter_quill:
+  hive_flutter: any
+  hive: any
+  google_nav_bar: any
+  google_fonts: any
 
 dev_dependencies:
   flutter_test:

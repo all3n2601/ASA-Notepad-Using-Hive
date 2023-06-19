@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,7 @@ class _EditingNotePageState extends State<EditingNotePage> {
     });
   }
 
+
   void addNewNote() {
 
     int id = Provider.of<NoteData>(context, listen: false)
@@ -51,7 +53,12 @@ class _EditingNotePageState extends State<EditingNotePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CupertinoColors.systemGroupedBackground,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+
+
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           color: Colors.black, onPressed: () {
@@ -91,9 +98,11 @@ class _EditingNotePageState extends State<EditingNotePage> {
             showUnderLineButton: false,
             showStrikeThrough: false,
             showListCheck: false,
+            showSuperscript: false,
+            showSubscript: false,
           ),
           Expanded(child: Container(
-            padding: EdgeInsets.all(25),
+            padding: const EdgeInsets.all(25),
             child: QuillEditor.basic(controller: _controller,readOnly: false),
           )),
         ],
