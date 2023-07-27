@@ -1,4 +1,5 @@
 import 'package:asa_notepad/models/note_data.dart';
+import 'package:asa_notepad/pages/settings_page.dart';
 import 'package:asa_notepad/pages/wallet_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../models/note.dart';
 import 'editing_page.dart';
+import 'main_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,6 +19,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  final List<Widget Function()> _pages = [
+        ()=>MainPage(),
+        ()=>WalletPage(),
+        ()=>SettingsPage()
+  ];
   @override
   void initState() {
     super.initState();
@@ -51,7 +60,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    int _selectedIndex;
+
     return Consumer<NoteData>(
       builder: (context, value, child) => Scaffold(
         backgroundColor: CupertinoColors.systemGroupedBackground,
@@ -76,35 +85,7 @@ class _HomePageState extends State<HomePage> {
           ),
           backgroundColor: const Color.fromRGBO(250, 240, 202, 1),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            value.getAllNotes().isEmpty
-                ? const Padding(
-                    padding: EdgeInsets.all(50.0),
-                    child: Center(child: Text('Nothing Here')),
-                  )
-                : CupertinoListSection.insetGrouped(
-                    children: List.generate(
-                      value.getAllNotes().length,
-                      (index) => CupertinoListTile(
-                        title: Text(value.getAllNotes()[index].text),
-                        onTap: () => goToNotePage(value.allNotes[index], false),
-                        backgroundColorActivated:
-                            Color.fromRGBO(250, 237, 205, 1),
-                        backgroundColor: Colors.brown.shade200,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete_forever_sharp),
-                          onPressed: () =>
-                              deleteNote(value.getAllNotes()[index]),
-                        ),
-                      ),
-                    ),
-                  )
-          ],
-        ),
+        body: _pages[_selectedIndex](),
         bottomNavigationBar: Container(
           color: const Color.fromRGBO(250, 237, 205, 1),
           child: Padding(
@@ -114,7 +95,7 @@ class _HomePageState extends State<HomePage> {
               tabShadow: [
                 BoxShadow(color: Colors.brown.withOpacity(0.2), blurRadius: 8)
               ],
-              selectedIndex: _selectedIndex = 0,
+              selectedIndex: _selectedIndex,
               onTabChange: (index) {
                 setState(() {
                   _selectedIndex = index;
@@ -130,20 +111,14 @@ class _HomePageState extends State<HomePage> {
                 GButton(
                   icon: Icons.note_add_sharp,
                   text: 'Notes',
-                  onPressed: () {},
                 ),
                 GButton(
                     icon: Icons.account_balance_wallet,
-                    text: 'Wallet',
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return WalletPage();
-                        },
-                      ));
-                    }),
+                    text: 'Wallet'),
                 GButton(
-                    icon: Icons.settings, text: 'Settings', onPressed: () {}),
+                    icon: Icons.settings,
+                    text: 'Settings'
+                ),
               ],
             ),
           ),
